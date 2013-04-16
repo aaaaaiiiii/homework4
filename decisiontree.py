@@ -1,4 +1,5 @@
 import sys
+import os
 import operator
 import math
 import uuid
@@ -157,6 +158,10 @@ def main():
 
 	output_filename = filename.rstrip('.dot') + '.pdf'
 	subprocess.call(["dot", "-Tpdf", filename, "-o", output_filename])
+	if(sys.platform == 'win32'):
+		os.system("start "+ output_filename)
+	elif(sys.platform == 'darwin'):
+		os.system("open " + output_filename)
 
 if __name__ == '__main__':
     main()
