@@ -17,18 +17,6 @@ class Tree():
 	def add_child(self, child, value):
 		self.children[value] = child
 
-	def preorder(self):
-		'Returns a string representing this tree as a preorder traversal.'
-		s = ''
-		if self.classification is not None:
-			s += self.classification + '\n'
-		elif self.attribute is not None:
-			s += self.attribute + '\n'
-		if self.children:
-			for value in self.children:
-				s += '\t' + self.children[value].preorder()
-        	return s
-
 	def graphviz_nodes(self):
        		'''
         	Returns all the nodes of the tree in dot format, i.e.,
