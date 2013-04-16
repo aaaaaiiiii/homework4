@@ -162,6 +162,8 @@ def main():
 		os.system("start "+ output_filename)
 	elif(sys.platform == 'darwin'):
 		os.system("open " + output_filename)
+	elif(sys.platform == 'linux2'):
+		os.system('xdg-open ' + output_filename)
 
 if __name__ == '__main__':
     main()
