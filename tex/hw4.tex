@@ -1,0 +1,90 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+\usepackage{epsfig}
+\usepackage{algorithm}
+\usepackage[noend]{algorithmic}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumerate}
+
+
+% FILL IN THE SPECIFICS OF EACH HOMEWORK HERE
+\newcommand{\course}{CS 364}
+\newcommand{\semester}{Spring 2013}
+\newcommand{\name}{Artificial Intelligence}
+%%%
+%%%
+%%% PLEASE FILL OUT YOUR NAME AND THE HWK NUMBER
+%%%
+%%%
+\newcommand{\hwk}{Homework \#4 Solutions}
+\newcommand{\student}{Oren Shoham, Peter Fogg, Sayer Rippey}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem*{lem}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{notation}{Notation}
+\newtheorem*{claim}{Claim}
+\newtheorem*{fclaim}{False Claim}
+\newtheorem{observation}{Observation}
+\newtheorem{conjecture}[lemma]{Conjecture}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem*{rt}{Running Time}
+
+
+
+
+%%% You can ignore the following stuff, it's just for formatting purposes
+\textheight=8.6in
+\setlength{\textwidth}{6.44in}
+\addtolength{\headheight}{\baselineskip} 
+% enumerate uses a), b), c), ...
+\renewcommand{\labelenumi}{\alph{enumi})}
+% Sets the style for fancy pages (namely, all but first page)
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+% Changes style of plain pages (namely, the first page)
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \renewcommand\headrulewidth{0pt}
+  \renewcommand\footrulewidth{0.4pt}
+  \renewcommand{\headrule}{}
+  }
+% Changes the title box on the first page
+\renewcommand\maketitle{
+\begin{center}
+\begin{tabular*}{6.44in}{l @{\extracolsep{\fill}}c r}
+\bfseries  &  & \bfseries \course ~\semester \\
+\bfseries&  & \bfseries  \hwk  \\
+\bfseries   &   &  \bfseries \student \\ 
+\end{tabular*}
+\end{center} }
+
+
+
+
+%%
+%%
+%% THE REAL STUFF STARTS HERE
+%%
+%%
+\begin{document}
+\maketitle
+\thispagestyle{plain}
+
+
+%%% PLEASE PLACE THE HONOR CODE AND YOUR NAME/SIGNATURE HERE
+\noindent Honor Code: 
+
+\subsection*{Part 1}
+When we do leave-one-out cross validation, we run 50 trials, each time training the classifier on 49  examples and then testing on the 50th. If the 50th is from class A, then the classifier trains on 24 examples of class A and 25 examples of class B, and will predict B for the test. Likewise, if the 50th example is from class B, the classifier will predict A, because the majority of the training set is in class A. Therefore, for each of the 50 trials, the classifier will predict the wrong class and score zero.
+\subsection*{Part 2}
+
+\subsection*{Part 3}
+
+
+\end{document}
