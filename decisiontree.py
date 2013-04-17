@@ -98,7 +98,7 @@ def id3(attributes, training_set, classifier):
 				for ex in s:
 					if ex[att] == val:
 						s_val.append(ex)
-				retval += (len(s_val) / len(s)) * entropy(s_val)
+				retval += (float(len(s_val)) / len(s)) * entropy(s_val)
 			return retval
 
 		def info_gain(att, s):
@@ -119,6 +119,7 @@ def id3(attributes, training_set, classifier):
 		return Tree(classification = majority_value(training_set, classifier))
 	else:
 		best_attribute = choose_best_attribute(training_set, attributes)
+		print best_attribute
 		tree = Tree(attribute = best_attribute)
 		for value in attributes[best_attribute]:
 			subset = []
@@ -152,19 +153,19 @@ def main():
 	f.close()
 
 	graph = to_graphviz(id3(attributes, examples, classifier))
-	filename = filename.rstrip('.txt') + '.dot'
+	filename = filename[:-3] + 'dot'
 	g = open(filename, 'w')
 	g.write(graph)
 	g.close()
 
-	output_filename = filename.rstrip('.dot') + '.pdf'
+	output_filename = filename[:-3] + 'pdf'
 	subprocess.call(["dot", "-Tpdf", filename, "-o", output_filename])
 	if(sys.platform == 'win32'):
 		os.system("start "+ output_filename)
 	elif(sys.platform == 'darwin'):
 		os.system("open " + output_filename)
 	elif(sys.platform == 'linux2'):
-		os.system('xdg-open ' + output_filename)
+		os.system("xdg-open " + output_filename)
 
 if __name__ == '__main__':
     main()
