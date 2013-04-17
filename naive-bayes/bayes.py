@@ -2,7 +2,7 @@
 
 import math
 import os
-from pprint import pprint
+import subprocess
 import sys
 
 class Language():
@@ -52,11 +52,28 @@ def classify(document, languages):
     lang = max(probs, key=lambda x: x[0])
     return lang[1].name
 
-def print_matrix(matrix):
+def create_matrix(matrix):
     'Prints the confusion matrix in a clean way.'
-    print('\t%20s\t%10s\t%10s' % tuple(matrix.keys()))
+    s = '''\\documentclass{article}
+\\renewcommand{\\maketitle}{
+  \\begin{center}
+    \\begin{flushright}
+      Fogg, Rippey, Shoham \\\\
+      CS364 \\\\
+      Naive Bayes Confusion Matrix
+    \\end{flushright}
+    \\rule{\\linewidth}{0.1mm}
+  \\end{center}
+}
+\\begin{document}
+\\maketitle
+\\begin{center}
+\\begin{tabular}{|c|c|c|c|}
+\\hline & %s & %s & %s \\\\ \\hline
+''' % tuple(matrix.keys())
     for k, v in matrix.items():
-        print('%10s\t%10s%10s%10s' % tuple([k] + v.values()))
+        s += '%s & %s & %s & %s \\\\ \\hline\n' % tuple([k] + v.values())
+    return s + '\\end{tabular}\n\\end{center}\n\\end{document}\n'
 
 def test(languages, directory):
     'Tests all languages in the given test directory, returning a table of error counts.'
@@ -93,8 +110,16 @@ def main():
         for char, count in language.char_counts.items():
             print('P(%s | %s: %s)' % (char, language.name, math.e**((math.log(count) if count != 0 else 0) - math.log(language.total_chars))))
         print('')
-    
-    print_matrix(test(languages, testing))
+    with open('bayes.tex', 'w') as f:
+         f.write(create_matrix(test(languages, testing)))
+    subprocess.call(['pdflatex', 'bayes.tex'])
+    output_filename = 'bayes.pdf'
+    if(sys.platform == 'win32'):
+        os.system("start "+ output_filename)
+    elif(sys.platform == 'darwin'):
+        os.system("open " + output_filename)
+    elif(sys.platform == 'linux2'):
+        os.system('xdg-open ' + output_filename)
     
 if __name__ == '__main__':
     main()
