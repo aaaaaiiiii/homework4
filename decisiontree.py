@@ -152,42 +152,6 @@ def main():
 		examples.append(example)
 	f.close()
 
-	def choose_best_attribute(dataset, atts):
-		def entropy(s):
-			proportions = {i: 0.0 for i in atts[classifier]}
-			retval = 0.0
-			for val in atts[classifier]:
-				for ex in s:
-					if ex[classifier] == val:
-						proportions[val] += 1.0
-				if len(s) == 0:
-					proportions[val] = 0.0
-				else:
-					proportions[val] /= len(s)
-				if proportions[val] != 0:
-					retval += proportions[val] * math.log(proportions[val], 2)
-			return -1 * retval
-		
-		def rem(att, s):
-			retval = 0.0
-			for val in atts[att]:
-				s_val = []
-				for ex in s:
-					if ex[att] == val:
-						s_val.append(ex)
-				retval += (float(len(s_val)) / len(s)) * entropy(s_val)
-			return retval
-
-		def info_gain(att, s):
-			return entropy(s) - rem(att, s)
-		
-		info_gains = {}
-		for att in atts:
-			if att != classifier:
-				info_gains[att] = info_gain(att, dataset)
-
-		return max(info_gains.iteritems(), key = operator.itemgetter(1))[0]
-
 	graph = to_graphviz(id3(attributes, examples, classifier))
 	filename = filename[:-3] + 'dot'
 	g = open(filename, 'w')
