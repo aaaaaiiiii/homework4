@@ -13,7 +13,6 @@ class Tree():
 		self.iden = str(uuid.uuid4().int)
 
 		if self.attribute is not None:
-			print self.attribute
 			if self.attribute[0].isdigit():
 				self.attribute = '_' + self.attribute
 		if self.classification is not None:
@@ -134,7 +133,7 @@ def id3(attributes, training_set, classifier):
 			subset = []
 			for example in training_set:
 				if example[best_attribute] == value:
-					subset.append(example)
+						subset.append(example)
 			sub_attributes = attributes.copy()
 			del sub_attributes[best_attribute]
 			subtree = id3(sub_attributes, subset, classifier)
