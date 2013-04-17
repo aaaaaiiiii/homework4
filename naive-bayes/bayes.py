@@ -7,10 +7,11 @@ import sys
 
 class Language():
     
-    def __init__(self, char_counts, total_chars, documents):
+    def __init__(self, char_counts, total_chars, documents, name=''):
         self.char_counts = char_counts
         self.total_chars = total_chars
         self.documents = documents
+        self.name = name
     
     def __unicode__(self):
         return self.name
@@ -93,22 +94,19 @@ def main():
         sys.exit(0)
     training = sys.argv[1] + '/'
     testing = sys.argv[2] + '/'
-    japanese = Language(*get_chars('Japanese', training + 'Japanese/'))
-    japanese.name = 'Japanese'
-    english = Language(*get_chars('English', training + 'English/'))
-    english.name = 'English'
-    spanish = Language(*get_chars('Spanish', training + 'Spanish/'))
-    spanish.name = 'Spanish'
+    languages = [Language(*get_chars(lang, training + lang + '/'), name=lang)
+                 for lang in ['Japanese', 'English', 'Spanish']]
     
-    total_documents = math.log(japanese.documents + english.documents + spanish.documents)
-    
-    languages = [japanese, english, spanish]
+    total_documents = math.log(sum(map(lambda x: x.documents, languages)))
     
     for language in languages:
         language.probability = math.log(language.documents) - total_documents
-        print('P(%s): %s' % (language.name, math.e**japanese.probability))
+        print('P(%s): %s' % (language.name, math.e**language.probability))
         for char, count in language.char_counts.items():
-            print('P(%s | %s: %s)' % (char, language.name, math.e**((math.log(count) if count != 0 else 0) - math.log(language.total_chars))))
+            print('P(%s | %s: %s)' % (char,
+                                      language.name,
+                                      math.e**((math.log(count) if count != 0 else 0) -
+                                               math.log(language.total_chars))))
         print('')
     with open('bayes.tex', 'w') as f:
          f.write(create_matrix(test(languages, testing)))
