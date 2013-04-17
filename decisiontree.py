@@ -106,7 +106,8 @@ def id3(attributes, training_set, classifier):
 		
 		info_gains = {}
 		for att in atts:
-			info_gains[att] = info_gain(att, dataset)
+			if att != classifier:
+				info_gains[att] = info_gain(att, dataset)
 
 		return max(info_gains.iteritems(), key = operator.itemgetter(1))[0]
 	
