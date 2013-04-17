@@ -11,11 +11,21 @@ class Tree():
 		self.classification = classification
 		self.children = {}
 		self.iden = str(uuid.uuid4().int)
+
+		if self.attribute is not None:
+			print self.attribute
+			if self.attribute[0].isdigit():
+				self.attribute = '_' + self.attribute
+		if self.classification is not None:
+			if self.classification[0].isdigit():
+				self.classification = '_' + self.classification
 	
 	def is_leaf(self):
 		return not self.children
 
 	def add_child(self, child, value):
+		if value[0].isdigit():
+			value = '_' + value
 		self.children[value] = child
 
 	def graphviz_nodes(self):
@@ -115,11 +125,10 @@ def id3(attributes, training_set, classifier):
 		return Tree(classification = 'FAIL')
 	elif same_value(training_set, classifier):
 		return Tree(classification = training_set[0][classifier])
-	elif not attributes:
+	elif not attributes or len(attributes) == 1:
 		return Tree(classification = majority_value(training_set, classifier))
 	else:
 		best_attribute = choose_best_attribute(training_set, attributes)
-		print best_attribute
 		tree = Tree(attribute = best_attribute)
 		for value in attributes[best_attribute]:
 			subset = []
