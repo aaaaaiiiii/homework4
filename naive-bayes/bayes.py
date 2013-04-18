@@ -55,26 +55,14 @@ def classify(document, languages):
 
 def create_matrix(matrix):
     'Prints the confusion matrix in a clean way.'
-    s = '''\\documentclass{article}
-\\renewcommand{\\maketitle}{
-  \\begin{center}
-    \\begin{flushright}
-      Fogg, Rippey, Shoham \\\\
-      CS364 \\\\
-      Naive Bayes Confusion Matrix
-    \\end{flushright}
-    \\rule{\\linewidth}{0.1mm}
-  \\end{center}
-}
-\\begin{document}
-\\maketitle
+    s = '''
 \\begin{center}
 \\begin{tabular}{|c|c|c|c|}
 \\hline & %s & %s & %s \\\\ \\hline
 ''' % tuple(matrix.keys())
     for k, v in matrix.items():
         s += '%s & %s & %s & %s \\\\ \\hline\n' % tuple([k] + v.values())
-    return s + '\\end{tabular}\n\\end{center}\n\\end{document}\n'
+    return s + '\\end{tabular}\n\\end{center}\n'
 
 def test(languages, directory):
     'Tests all languages in the given test directory, returning a table of error counts.'
@@ -87,6 +75,12 @@ def test(languages, directory):
                 if classified != language.name:
                     error_count[classified][language.name] += 1
     return error_count
+
+def char_count_table(language):
+    tex = '\n'.join(['%s & %s \\\\' % (char, math.e**((math.log(count) if count != 0 else 0) -
+                                               math.log(language.total_chars))) for char, count in
+                     language.char_counts.items()])
+    return '\\begin{tabular}{c|c}\nc & $P(c \\mid %s)$ \\\\ \\hline' % language.name + tex + '\n\\end{tabular}'
 
 def main():
     if len(sys.argv) != 3:
@@ -101,16 +95,31 @@ def main():
     
     for language in languages:
         language.probability = math.log(language.documents) - total_documents
-        print('P(%s): %s' % (language.name, math.e**language.probability))
-        for char, count in language.char_counts.items():
-            print('P(%s | %s: %s)' % (char,
-                                      language.name,
-                                      math.e**((math.log(count) if count != 0 else 0) -
-                                               math.log(language.total_chars))))
-        print('')
+    
     with open('bayes.tex', 'w') as f:
-         f.write(create_matrix(test(languages, testing)))
-    subprocess.call(['pdflatex', 'bayes.tex'])
+        tex_begin = '''\\documentclass{article}
+\\usepackage{fullpage}
+\\setlength{\\textwidth}{6.3in}
+\\renewcommand{\\maketitle}{
+  \\begin{center}
+    \\begin{flushright}
+      Fogg, Rippey, Shoham \\\\
+      CS364 \\\\
+      Naive Bayes Data
+    \\end{flushright}
+    \\rule{\\linewidth}{0.1mm}
+  \\end{center}
+}
+\\begin{document}
+\\maketitle'''
+        tex_end = '\n\\end{document}\n'
+        f.write(tex_begin +
+                '\\begin{center}\n' +
+                '\n'.join([char_count_table(language) for language in languages]) +
+                '\\end{center}\n' +
+                create_matrix(test(languages, testing)) +
+                tex_end)
+    subprocess.call(['pdflatex', 'bayes.tex'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output_filename = 'bayes.pdf'
     if(sys.platform == 'win32'):
         os.system("start "+ output_filename)
