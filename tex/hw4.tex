@@ -83,7 +83,10 @@
 \subsection*{Part 1}
 When we do leave-one-out cross validation, we run 50 trials, each time training the classifier on 49  examples and then testing on the 50th. If the 50th is from class A, then the classifier trains on 24 examples of class A and 25 examples of class B, and will predict B for the test. Likewise, if the 50th example is from class B, the classifier will predict A, because the majority of the training set is in class A. Therefore, for each of the 50 trials, the classifier will predict the wrong class and score zero.
 \subsection*{Part 2}
-
+\begin{itemize}
+\item True. We encode every conjuction as a path from the root to a true leaf. We can split on an arbitrary attribute at any level of the tree. The tree must be complete, though, so we add a false node to any unused leaf nodes.
+\item
+\end{itemize}
 \subsection*{Part 3}
 
 
