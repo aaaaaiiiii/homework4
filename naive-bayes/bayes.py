@@ -99,6 +99,7 @@ def main():
     with open('bayes.tex', 'w') as f:
         tex_begin = '''\\documentclass{article}
 \\usepackage{fullpage}
+\\usepackage{amsmath,amssymb,amsthm}
 \\setlength{\\textwidth}{6.3in}
 \\renewcommand{\\maketitle}{
   \\begin{center}
@@ -114,12 +115,16 @@ def main():
 \\maketitle'''
         tex_end = '\n\\end{document}\n'
         f.write(tex_begin +
+                '\\begin{itemize}\n' +
+                ''.join(['\\item $P(\\text{%s}) = %s$ \n' % (language.name, language.probability)
+                         for language in languages]) + 
+                '\\end{itemize}\n' + 
                 '\\begin{center}\n' +
                 '\n'.join([char_count_table(language) for language in languages]) +
                 '\\end{center}\n' +
                 create_matrix(test(languages, testing)) +
                 tex_end)
-    subprocess.call(['pdflatex', 'bayes.tex'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.call(['pdflatex', 'bayes.tex'])#, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output_filename = 'bayes.pdf'
     if(sys.platform == 'win32'):
         os.system("start "+ output_filename)
