@@ -1,3 +1,9 @@
+'''
+Artificial Intelligence
+Homework 4 Part 7
+Oren Shoham, Sayer Rippey, Peter Fogg
+'''
+
 import sys
 import os
 import operator
@@ -5,7 +11,14 @@ import math
 import uuid
 import subprocess
 
+'''
+Tree Class (used to build decision tree)
+Each Tree stores an attribute or a classification (never both), and a dictionary of child Trees
+'''
 class Tree():
+	'''
+	Constructor
+	'''
 	def __init__(self, attribute = None, classification = None):
 		self.attribute = attribute
 		self.classification = classification
@@ -22,6 +35,9 @@ class Tree():
 	def is_leaf(self):
 		return not self.children
 
+	'''
+	Add a child as the value of a dictionary entry whose key is the value of the attribute that was split on to lead to this node of the Tree
+	'''
 	def add_child(self, child, value):
 		if value[0].isdigit():
 			value = '_' + value
@@ -67,7 +83,12 @@ def to_graphviz(tree):
     s += '\n}'
     return s
 
+
+'''
+ID3 Algorithm
+'''
 def id3(attributes, training_set, classifier):
+	'Determines whether every dictionary in list_of_dicts has the same value for key'
 	def same_value(list_of_dicts, key):
 		value = list_of_dicts[0][key]
 		for dictionary in list_of_dicts[1:]:
@@ -75,6 +96,7 @@ def id3(attributes, training_set, classifier):
 				return False
 		return True
 
+	'Determines the most common value in list_of_dicts for key'
 	def majority_value(list_of_dicts, key):
 		value_freqs = {}
 		for dictionary in list_of_dicts:
@@ -84,7 +106,9 @@ def id3(attributes, training_set, classifier):
 				value_freqs[dictionary[key]] = 1
 		return max(value_freqs.iteritems(), key = operator.itemgetter(1))[0]
 
+	'Chooses the attribute with the largest info gain.'
 	def choose_best_attribute(dataset, atts):
+		'Computes the entropy of a set of examples'
 		def entropy(s):
 			proportions = {i: 0.0 for i in atts[classifier]}
 			retval = 0.0
@@ -100,6 +124,7 @@ def id3(attributes, training_set, classifier):
 					retval += proportions[val] * math.log(proportions[val], 2)
 			return -1 * retval
 		
+		'Computes the Rem of a set of examples split on an attribute'
 		def rem(att, s):
 			retval = 0.0
 			for val in atts[att]:
@@ -110,6 +135,7 @@ def id3(attributes, training_set, classifier):
 				retval += (float(len(s_val)) / len(s)) * entropy(s_val)
 			return retval
 
+		'Computes the Info Gain of a set of examples split on an attribute'
 		def info_gain(att, s):
 			return entropy(s) - rem(att, s)
 		
@@ -117,19 +143,19 @@ def id3(attributes, training_set, classifier):
 		for att in atts:
 			if att != classifier:
 				info_gains[att] = info_gain(att, dataset)
-
-		return max(info_gains.iteritems(), key = operator.itemgetter(1))[0]
+		
+		return max(info_gains.iteritems(), key = operator.itemgetter(1))[0] # Return the attribute with the largest info gain
 	
-	if not training_set:
+	if not training_set: # If there are no training examples left, make a FAIL node
 		return Tree(classification = 'FAIL')
-	elif same_value(training_set, classifier):
+	elif same_value(training_set, classifier): # If all examples have the same classification, make a node with that classification
 		return Tree(classification = training_set[0][classifier])
-	elif not attributes or len(attributes) == 1:
+	elif not attributes or len(attributes) == 1: # If there are no attributes left or only the classifier is left, make a node with the majority classification
 		return Tree(classification = majority_value(training_set, classifier))
 	else:
-		best_attribute = choose_best_attribute(training_set, attributes)
-		tree = Tree(attribute = best_attribute)
-		for value in attributes[best_attribute]:
+		best_attribute = choose_best_attribute(training_set, attributes) # choose the attribute with the highest info gain
+		tree = Tree(attribute = best_attribute) # make a node with the best attribute
+		for value in attributes[best_attribute]: # split on best attribute and run ID3 on each subset
 			subset = []
 			for example in training_set:
 				if example[best_attribute] == value:
