@@ -83,10 +83,10 @@
 \subsection*{Part 1}
 When we do leave-one-out cross validation, we run 50 trials, each time training the classifier on 49  examples and then testing on the 50th. If the 50th is from class A, then the classifier trains on 24 examples of class A and 25 examples of class B, and will predict B for the test. Likewise, if the 50th example is from class B, the classifier will predict A, because the majority of the training set is in class A. Therefore, for each of the 50 trials, the classifier will predict the wrong class and score zero.
 \subsection*{Part 2}
-\begin{itemize}
-\item True. We encode every conjuction as a path from the root to a true leaf. We can split on an arbitrary attribute at any level of the tree. The tree must be complete, though, so we add a false node to any unused leaf nodes.
-\item
-\end{itemize}
+\begin{enumerate}
+\item True. We encode every conjunction as a path from the root to a true leaf. We can split on an arbitrary attribute at any level of the tree. The tree must be complete, though, so we add a false node to any unused leaf nodes. As a result, any assignment of variables which would satisfy the formula corresponds to a path from the root to a true leaf. Any other assignment would reach a false leaf.
+\item A consistent binary data set is really just a truth table. We can construct a tree similarly to above, splitting on some attribute and continuing to build the left subtree with all data points where the attribute is true, and the right subtree with the attribute false. Because the data set is consistent, we know we will either have true or false at a particular leaf, and never need to choose one or the other.
+\end{enumerate}
 \subsection*{Part 3}
 \begin{enumerate}[a.]
 \item If a given neuron in a neural network calculates $(\vec{x} \cdot \vec{w})$ and then applies the threshold functions (assume $threshold(0) =  1$), and we multiply every weight/threshold by $c$, we get  $(\vec{x} \cdot (c * \vec{w})) =  c*(\vec{x} \cdot \vec{w})$. If $c$ is positive, than there will be no change to the output of the threshold function, because the product of a positive number and a positive number is positive, and the product of a negative number and a positive number is negative. If $c$ is 0, then the threshold function will output 1. Similarly, if $c$ is negative, the sign will switch, and threshold will output the opposite of what it did before, unless $(\vec{x} \cdot \vec{w}) = 0$.
