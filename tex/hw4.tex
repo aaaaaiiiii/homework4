@@ -88,6 +88,10 @@ When we do leave-one-out cross validation, we run 50 trials, each time training 
 \item
 \end{itemize}
 \subsection*{Part 3}
+\begin{enumerate}[a.]
+\item If a given neuron in a neural network calculates $(\vec{x} \cdot \vec{w})$ and then applies the threshold functions (assume $threshold(0) =  1$), and we multiply every weight/threshold by $c$, we get  $(\vec{x} \cdot (c * \vec{w})) =  c*(\vec{x} \cdot \vec{w})$. If $c$ is positive, than there will be no change to the output of the threshold function, because the product of a positive number and a positive number is positive, and the product of a negative number and a positive number is negative. If $c$ is 0, then the threshold function will output 1. Similarly, if $c$ is negative, the sign will switch, and threshold will output the opposite of what it did before, unless $(\vec{x} \cdot \vec{w}) = 0$.
+\item If we add $c$ to every weight, then instead of calculating $(\vec{x} \cdot \vec{w})$ we get $(x_{0}(w_{0} + c) + x_{1}(w_{1} + c) + \ldots + x_{i}(w_{i} + c)) = (\vec{x} \cdot \vec{w}) + \sum\limits_{i} x_{i}*c$. Therefore, if the absolute value of $\sum\limits_{i} x_{i}*c$ is greater than the absolute value of $(\vec{x} \cdot \vec{w}) $ and their signs are different, the output of the neuron will change. Otherwise, it will stay the same. 
+\end{enumerate}
 
 \subsection*{Part 5}
 
